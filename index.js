@@ -6,8 +6,11 @@ const email = process.argv[4];
 let cadastros = {};
 
 fs.readFile('cadastros.json',  (err, dados) => {
-    let dadosString = dados.toString();
-    cadastros = JSON.parse(dadosString);
+
+    if(!err){
+        let dadosString = dados.toString();
+        cadastros = JSON.parse(dadosString);
+    }
     
     if(comando === 'salvar'){
         cadastros[nome] = email;
