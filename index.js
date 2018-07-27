@@ -1,20 +1,17 @@
 const fs = require('fs');
+const comandos = require('./comandos');
 const comando = process.argv[2];
-const nome = process.argv[3];
-const email = process.argv[4];
 
-let cadastros = {};
+const dados = {};
 
-const comandos = {
-    'salvar': salvar,
-    'buscar': buscar,
-    'buscar-todos': buscarTodos       
-}
+dados.nome = process.argv[3];
+dados.email = process.argv[4];
+dados.cadastros = {};
 
-fs.readFile('cadastros.json',  (err, dados) => {
-    if(!err){
-        let dadosString = dados.toString();
-        cadastros = JSON.parse(dadosString);
+fs.readFile('cadastros.json',  (erro, resposta) => {
+    if(!erro){
+        let dadosString = resposta.toString();
+        dados.cadastros = JSON.parse(dadosString);
     }
 
     if(!comandos[comando]){
@@ -22,36 +19,5 @@ fs.readFile('cadastros.json',  (err, dados) => {
         return
     }
 
-    comandos[comando]();
+    comandos[comando](dados);
 });
-
-function salvar(){
-    if(!nome || !email){
-        console.log('Nome e email são obrigatórios, cacilda!');
-        return;
-    }
-
-    cadastros[nome] = email;
-    
-    const dadosGravacao = JSON.stringify(cadastros);
-    
-    fs.writeFile('cadastros.json', dadosGravacao, (err) => {
-        if(err){
-            console.log('Deu ruim');
-        }else{
-            console.log('Gravei o arquivo');
-        }
-    });    
-}
-
-function buscarTodos(){
-    console.log(cadastros);
-}
-
-function buscar(){
-    if(!cadastros[nome]){
-        console.log('Num achei!');
-    }else{
-        console.log(cadastros[nome]);
-    }
-}
